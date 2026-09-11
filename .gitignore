@@ -1,0 +1,13 @@
+# Dependencies and machine-local files
+node_modules/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+Thumbs.db
+__pycache__/
+*.py[cod]
+.vscode/
+.idea/
+# dist/ is the website source and must remain tracked.

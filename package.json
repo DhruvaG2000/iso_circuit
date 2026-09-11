@@ -1,0 +1,13 @@
+{
+  "name": "nano-atlas",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local 3D explorer for Arduino Nano 33 BLE Sense and BeaglePlay",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "start": "node server.cjs",
+    "test": "node verify.mjs"
+  },
+  "engines": { "node": ">=22" }
+}
