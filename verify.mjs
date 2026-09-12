@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import {spawn} from 'node:child_process';
-import {connections} from './dist/connections.js';
+const routing=JSON.parse(fs.readFileSync('dist/assets/routing.json'));
 const root=path.resolve('dist'),html=fs.readFileSync('dist/index.html','utf8');
 const bom=JSON.parse(fs.readFileSync('dist/assets/bom.json')),assembly=JSON.parse(fs.readFileSync('dist/assets/assembly.json'));
 const glb=fs.readFileSync('dist/assets/beagleplay.glb');
@@ -13,9 +13,13 @@ const refs=gltf.nodes.filter(n=>n.extras?.ref).map(n=>n.extras.ref);assert.equal
 for(const p of assembly.parts)assert(p.center.every(Number.isFinite)&&p.center.every(v=>Math.abs(v)<50),`${p.ref}: valid placement`);
 for(const ref of ['U1','U2','U3','U5','J24','J14','J21'])assert(refs.includes(ref),`${ref} must be selectable`);
 assert.equal(Object.keys(bom).length,725);assert.equal(bom.U11.mpn,'ADC102S021CIMMX/NOPB');assert.equal(bom.U17.mpn,'TPS6521903RHBR');
-for(const n of connections){assert(n.refs.length>1);assert.equal(new Set(n.refs).size,n.refs.length);assert(n.refs.every(r=>refs.includes(r)||bom[r]),`${n.id}: known endpoint`);}
-assert.deepEqual(connections.find(n=>n.id==='usbpower').refs,['U8','J13']);
-assert.deepEqual(connections.find(n=>n.id==='spepower').refs,['U21','J2']);
+assert.equal(routing.layers.length,8);
+assert.deepEqual(routing.components.J6.map(p=>[p.number,routing.nets[p.net].name]),[['1','GND'],['2','DEBUG_RXD'],['3','DEBUG_TXD']]);
+const serialCenter=assembly.parts.find(p=>p.ref==='J6').center;
+assert(Math.abs(routing.components.J6[1].x-serialCenter[0])<.001&&Math.abs(routing.components.J6[1].z-serialCenter[2])<.001,'PCB pin map aligns with CAD header');
+for(const net of routing.nets)for(const t of net.tracks){assert(t.every(Number.isFinite));assert(routing.layers.includes(t[0]));assert(t.slice(1,5).every(v=>Math.abs(v)<21),'Copper route stays on PCB');}
+for(const p of routing.components.J6.slice(1)){const n=routing.nets[p.net];assert(n.tracks.some(t=>Math.hypot(t[1]-p.x,t[2]-p.z)<.001||Math.hypot(t[3]-p.x,t[4]-p.z)<.001),'Serial trace begins at its physical pad');}
+assert(!fs.readFileSync('dist/viewer.js','utf8').includes('QuadraticBezierCurve3'),'No invented flying paths');
 assert(html.includes('<title>BeaglePlay — Inside the board</title>'));
 const imported=new Set();
 function checkModule(file){if(imported.has(file))return;imported.add(file);const text=fs.readFileSync(file,'utf8');for(const m of text.matchAll(/^import\s+(?:\{[\s\S]*?\}|[^\n]+?)\s+from\s*['"]([^'"]+)['"]/gm)){const spec=m[1];if(spec==='three'){checkModule(path.join(root,'vendor/three.module.js'));continue;}assert(spec.startsWith('.'),`Self-hosted module: ${spec}`);const target=path.resolve(path.dirname(file),spec);assert(fs.existsSync(target),`Missing module: ${target}`);checkModule(target);}}
@@ -31,4 +35,4 @@ try{
  for(const [file,type]of [['','text/html'],['viewer.js','text/javascript'],['vendor/meshopt_decoder.js','text/javascript'],['assets/beagleplay.glb','model/gltf-binary'],['assets/bom.json','application/json']]){const response=await fetch(base+file);assert.equal(response.status,200,file);assert(response.headers.get('content-type').includes(type),`Correct MIME for ${file}`);await response.arrayBuffer();}
  assert.equal((await fetch(base+'assets/missing.glb')).status,404);
 }finally{child.kill();}
-console.log(`PASS: ${refs.length} model components, ${Object.keys(bom).length} BOM entries, ${connections.length} functional bundles, ${(glb.length/1024/1024).toFixed(2)} MiB model. Module graph, resources and project-path serving verified.`);
+console.log(`PASS: ${refs.length} model components, ${routing.nets.length} PCB nets, eight copper layers, serial pin alignment and trace endpoints. Module graph, resources and project-path serving verified.`);

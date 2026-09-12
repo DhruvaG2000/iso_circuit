@@ -13,6 +13,8 @@ Full upstream text: `assets-source/HARDWARE-LICENSE.txt` and `dist/assets/HARDWA
 
 Files: official BOM, Gerber artwork, component-location workbook in `assets-source`; derived `dist/assets/beagleplay.glb`, PCB textures, component catalog and assembly metadata. Changes: STEP assembly extraction, tessellation, coordinate conversion, compressed glTF packaging, applied artwork, reconstructed PCB/U5 body, additional connector inserts, labels and rendering materials. CAD and artwork originate from different dated revisions as stated in README and the website.
 
+`dist/assets/routing.json` is also derived from the CC BY 4.0 BeaglePlay hardware: the official Altium export named in README. Changes include extracting named nets, pads, vias and tracks, sampling arcs, and transforming coordinates into the viewer. The source PCB database is downloaded by `download-sources.mjs` and excluded from Git.
+
 ## Three.js r170 — MIT
 
 Files: `dist/vendor/three.module.js`, `OrbitControls.js`, `GLTFLoader.js`, `BufferGeometryUtils.js`, `RoomEnvironment.js`.

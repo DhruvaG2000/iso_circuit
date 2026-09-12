@@ -2,6 +2,7 @@
 node_modules/
 .tools/
 assets-source/*.stp
+assets-source/*.PcbDoc
 assets-source/cad-*.json
 assets-source/split/
 assets-source/meshes/

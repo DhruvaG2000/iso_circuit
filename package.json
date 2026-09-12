@@ -17,6 +17,7 @@
     "@gltf-transform/extensions": "^4.5.0",
     "@gltf-transform/functions": "^4.5.0",
     "@resvg/resvg-js": "^2.6.2",
+    "cfb": "^1.2.2",
     "meshoptimizer": "^1.2.0",
     "occt-import-js": "^0.0.23"
   }

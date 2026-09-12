@@ -2,7 +2,7 @@
 
 A static, interactive 3D explorer dedicated to BeaglePlay. The browser loads a compressed 5.3 MiB model with 798 individually selectable component assemblies, original PCB silkscreen, material grain, plated connectors and chip markings.
 
-Rotate, zoom, pan, switch front/back views, explode the assembly, isolate a part, or follow functional connection paths. Search references, functions and manufacturer part numbers. The inspector includes the published BOM, verified TI datasheet links where available, and Mouser/DigiKey searches.
+Rotate, zoom, pan, switch front/back views, explode the assembly, isolate a part, or select a pin to follow its exported PCB traces. Search references, functions, manufacturer part numbers and pin signals. The inspector includes the published BOM, verified TI datasheet links where available, and Mouser/DigiKey searches. Select J6 to click the exposed GND, RX and TX pins directly in 3D.
 
 ## Run locally
 
@@ -30,7 +30,7 @@ This change prepares the workflow; it does not itself push or publish the reposi
 - PCB: February 2023 Gerber silkscreen/solder-mask artwork rendered at 4096 × 4096. The rounded substrate and mounting holes are reconstructed; minor revision/placement differences can exist.
 - U5 Wi-Fi module: reconstructed from its documented package dimensions and official placement. Connector inserts, surface materials and laser markings are visual additions. This is a rendered CAD model, not a photogrammetry scan or a manufacturing inspection tool.
 - Catalog: all 725 published BOM references are searchable. The CAD also contains extra references; unmatched entries are identified. Thirteen BOM references lack corresponding 3D geometry and remain inspectable as “BOM only”.
-- Connection paths show functional bus/rail bundles. They are **not physical copper routes**, and individual passive nets are not mapped. Exact wiring remains in the linked official schematic.
+- Routing: the official Altium export `Design/Altium Export/BEAGLEPLAYV020_220915.PrjPcb/BEAGLEPLAYV020_220915.brd.PcbDoc` supplies 546 named nets, 12,470 trace segments and pin maps for 782 component references. Routes follow source X/Z coordinates across eight copper layers; arc centerlines are sampled in steps of at most five degrees. X-ray overlays remain inside the board thickness when components are exploded. Layer spacing is illustrative, and narrow tracks have a minimum display width. Copper pours and plane fills are omitted, so power/GND paths may be incomplete. Export and assembly revisions can differ. Serial pad alignment and trace endpoints are regression checked.
 - Distributor links are part-number searches, not verified stock listings. Some manufacturer part numbers contain source-BOM variant suffixes. Parts without a verified direct datasheet link say so.
 
 Source hardware: [BeaglePlay design repository](https://openbeagle.org/beagleplay/beagleplay), [board photographs and component documentation](https://docs.beagleboard.org/boards/beagleplay/01-introduction.html), and [official board page](https://www.beagleboard.org/boards/beagleplay).
@@ -45,6 +45,7 @@ node split-step.mjs
 node convert-split.cjs
 node build-artwork.mjs
 node build-bom.mjs
+node build-routing.mjs
 node build-model.mjs
 node optimize-model.mjs
 node verify.mjs
