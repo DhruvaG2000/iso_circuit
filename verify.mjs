@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import {spawn} from 'node:child_process';
+import {endpointPlan} from './dist/endpoint-plan.js';
 const routing=JSON.parse(fs.readFileSync('dist/assets/routing.json'));
 const root=path.resolve('dist'),html=fs.readFileSync('dist/index.html','utf8');
 const bom=JSON.parse(fs.readFileSync('dist/assets/bom.json')),assembly=JSON.parse(fs.readFileSync('dist/assets/assembly.json'));
@@ -14,6 +15,10 @@ for(const p of assembly.parts)assert(p.center.every(Number.isFinite)&&p.center.e
 for(const ref of ['U1','U2','U3','U5','J24','J14','J21'])assert(refs.includes(ref),`${ref} must be selectable`);
 assert.equal(Object.keys(bom).length,725);assert.equal(bom.U11.mpn,'ADC102S021CIMMX/NOPB');assert.equal(bom.U17.mpn,'TPS6521903RHBR');
 assert.equal(routing.layers.length,8);
+const planFor=(ref,number)=>endpointPlan(routing,routing.components[ref].find(p=>p.number===number));
+for(const [ref,pin,ball] of [['J6','2','D14'],['J6','3','E14'],['J7','1','B17'],['J7','2','A17'],['J21','3','B15'],['J21','5','E15']]){const p=planFor(ref,pin);assert.equal(p.ends[0].ref,'U1');assert.equal(p.ends[0].number,ball,`${ref}:${pin} exact SoC endpoint`);}
+assert.equal(planFor('J6','2').stages[0].from.number,'2');assert.equal(planFor('J6','2').stages[0].to.number,'6');
+assert(planFor('J6','1').shared);assert.equal(planFor('J6','1').stages.length,0,'Never cross buffer channels from GND');
 assert.deepEqual(routing.components.J6.map(p=>[p.number,routing.nets[p.net].name]),[['1','GND'],['2','DEBUG_RXD'],['3','DEBUG_TXD']]);
 const serialCenter=assembly.parts.find(p=>p.ref==='J6').center;
 assert(Math.abs(routing.components.J6[1].x-serialCenter[0])<.001&&Math.abs(routing.components.J6[1].z-serialCenter[2])<.001,'PCB pin map aligns with CAD header');

@@ -6,6 +6,10 @@ Rotate, zoom, pan, switch front/back views, explode the assembly, isolate a part
 
 ## Run locally
 
+Hover a connector contact to read its reference, pin number and PCB net without selecting the package first. Clicking a contact opens a pin-to-pin X-ray view: green marks the source pad, amber marks the destination pad/SoC ball and package. “Show both endpoints” reframes the pair; the destination selector lists every other connected pad, including branches. Power and ground are identified as shared nets, not single-destination signals.
+
+For the serial console, the viewer follows the verified U10 SN74LVC2G241 channels across separate nets: J6 pin 2 → U10 pins 2/6 → U1 ball D14 (UART0_RXD), and J6 pin 3 → U10 pins 3/5 → U1 ball E14 (UART0_TXD). The buffer stage is explicitly distinguished from copper and linked to the TI datasheet. Other ICs are endpoints; internal signal paths are not inferred. The mikroBUS receptacle hover targets are offset from the SMT solder tails to match the visible socket; copper highlights retain original PCB coordinates.
+
 Requires Node.js 22 or newer. Runtime dependencies are included in `dist`; no package installation or CAD software is needed to view the site.
 
 ```sh
