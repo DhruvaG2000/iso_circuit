@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+import {NodeIO} from '@gltf-transform/core';
+import {ALL_EXTENSIONS} from '@gltf-transform/extensions';
+import {dedup,prune,meshopt} from '@gltf-transform/functions';
+import {MeshoptEncoder,MeshoptDecoder} from 'meshoptimizer';
+await MeshoptEncoder.ready;await MeshoptDecoder.ready;
+const io=new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({'meshopt.encoder':MeshoptEncoder,'meshopt.decoder':MeshoptDecoder});
+const doc=await io.read('dist/assets/beagleplay.glb');
+await doc.transform(dedup(),prune(),meshopt({encoder:MeshoptEncoder,level:'high'}));
+await io.write('dist/assets/beagleplay.glb',doc);
+const metadata=JSON.parse(fs.readFileSync('dist/assets/assembly.json'));metadata.bytes=fs.statSync('dist/assets/beagleplay.glb').size;fs.writeFileSync('dist/assets/assembly.json',JSON.stringify(metadata));
+console.log('Optimized model:',(fs.statSync('dist/assets/beagleplay.glb').size/1024/1024).toFixed(2),'MB');

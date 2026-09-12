@@ -1,5 +1,14 @@
 # Dependencies and machine-local files
 node_modules/
+.tools/
+assets-source/*.stp
+assets-source/cad-*.json
+assets-source/split/
+assets-source/meshes/
+assets-source/meshes-color/
+*.blend
+*.blend1
+qa/
 .env
 .env.*
 !.env.example

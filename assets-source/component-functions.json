@@ -1,0 +1,142 @@
+{
+  "U1": {
+    "name": "Application processor",
+    "description": "Runs Linux and coordinates memory, storage, display, and peripheral interfaces. The chip contains four Cortex-A53 cores plus real-time processing subsystems."
+  },
+  "U2": {
+    "name": "System memory",
+    "description": "Working memory for the operating system and applications. Its dedicated parallel DDR bus carries address, command, clock, and data signals."
+  },
+  "U3": {
+    "name": "Onboard storage",
+    "description": "Soldered flash storage for the bootloader, Linux, and user files. Connected to the processor through its eight-bit MMC0 interface."
+  },
+  "J1": {
+    "name": "microSD socket",
+    "description": "Accepts a microSD card for booting, expanding storage, or installing an image to eMMC. Uses MMC1; it is a separate interface from onboard eMMC."
+  },
+  "U5": {
+    "name": "Wi-Fi module",
+    "description": "Dual-band Wi-Fi module connected through SDIO. Two external antenna sockets serve its radio paths. Bluetooth and sub-GHz functions are handled by the separate CC1352P7."
+  },
+  "U9": {
+    "name": "Wireless microcontroller",
+    "description": "A separate wireless MCU for BLE and sub-GHz networking. Linux communicates with its firmware over UART6. Radio capabilities depend on the loaded firmware."
+  },
+  "SH1": {
+    "name": "Wireless microcontroller",
+    "description": "A separate wireless MCU for BLE and sub-GHz networking. Linux communicates with its firmware over UART6. Radio capabilities depend on the loaded firmware."
+  },
+  "U6": {
+    "name": "Gigabit Ethernet PHY",
+    "description": "Converts the processor’s RGMII interface into Ethernet signaling. The RJ45 connector includes magnetics between the PHY and the network cable."
+  },
+  "U13": {
+    "name": "Single-pair Ethernet PHY",
+    "description": "Translates RMII data from the processor into 10BASE-T1L signaling over one twisted pair. The RJ11 port also provides a controlled power output."
+  },
+  "J24": {
+    "name": "Gigabit Ethernet port",
+    "description": "Wired network connector. Signals pass through integrated magnetics to the RTL8211F PHY before reaching the processor."
+  },
+  "J2": {
+    "name": "Single-pair Ethernet port",
+    "description": "Single-pair Ethernet connection with power over the data line. The board documentation specifies a 5 V, 250 mA output; this port is not the board’s power input."
+  },
+  "J14": {
+    "name": "USB-C power & device",
+    "description": "Supplies 5 V power and provides a USB device connection to a host computer. This connector does not negotiate higher USB-PD voltages."
+  },
+  "J13": {
+    "name": "USB-A host",
+    "description": "Connects peripherals such as keyboards, mice, and cameras to the USB1 host controller. A power switch feeds the port’s VBUS."
+  },
+  "J4": {
+    "name": "HDMI output",
+    "description": "Receives digital video from the IT66121 transmitter. The transmitter bridges the processor’s parallel display signals to HDMI."
+  },
+  "U7": {
+    "name": "HDMI transmitter",
+    "description": "Bridges the parallel RGB display bus to HDMI. I²C2 configures the chip, and McASP1 supplies digital audio."
+  },
+  "J8": {
+    "name": "Display ribbon connector",
+    "description": "Connects a compatible LVDS/OLDI display. Display lanes run directly to the processor; control and power circuits support the panel."
+  },
+  "J17": {
+    "name": "Camera ribbon connector",
+    "description": "Connects a compatible MIPI CSI-2 camera. Image data uses differential lanes, while a separate I²C link configures the camera."
+  },
+  "J21": {
+    "name": "mikroBUS socket",
+    "description": "Accepts compatible Click boards. Select an individual contact below to trace its function. Bus assignment depends on the operating-system pin configuration."
+  },
+  "J7": {
+    "name": "Grove connector",
+    "description": "Expansion port exposing I²C1 with power and ground. Alternate functions depend on pin multiplexing and software configuration."
+  },
+  "J18": {
+    "name": "Qwiic connector",
+    "description": "Small I²C expansion connector compatible with Qwiic and STEMMA QT devices. It uses MCU_I2C0 and supplies 3.3 V."
+  },
+  "U11": {
+    "name": "Analog converter",
+    "description": "External two-channel, 10-bit ADC. It converts expansion analog signals into serial data for the processor. This is distinct from the digital GPIO paths."
+  },
+  "U17": {
+    "name": "Power management",
+    "description": "Sequences the processor and memory supplies. Several independently regulated outputs are shown as a grouped power connection, not as one shared voltage rail."
+  },
+  "U12": {
+    "name": "3.3 V regulator",
+    "description": "Efficient step-down supply for the main 3.3 V rail and expansion connectors. The PMIC controls its enable input."
+  },
+  "U16": {
+    "name": "1.0 V regulator",
+    "description": "Generates the 1.0 V supply used by the single-pair Ethernet PHY from a 1.8 V input rail."
+  },
+  "U18": {
+    "name": "Real-time clock",
+    "description": "Keeps time independently of Linux. A backup coin cell can maintain the clock while main board power is off."
+  },
+  "J10": {
+    "name": "RTC battery holder",
+    "description": "Holds a CR1220 backup cell for the real-time clock. It does not power the main processor or charge a battery."
+  },
+  "U20": {
+    "name": "Board identification",
+    "description": "Stores board identification data on the local I²C0 bus. This small EEPROM is separate from the eMMC storage."
+  },
+  "SW1": {
+    "name": "Power button",
+    "description": "Connects to the power-management control path for board power operations. Behavior depends on press duration and the running software."
+  },
+  "SW2": {
+    "name": "Reset button",
+    "description": "Requests a system reset. This is a separate control from powering off the board."
+  },
+  "SW3": {
+    "name": "User / boot button",
+    "description": "Used for boot selection at startup and as a software input. The documentation describes holding it for SD-card boot selection."
+  },
+  "J6": {
+    "name": "Serial console",
+    "description": "UART0 console for boot messages and a Linux terminal using a compatible logic-level serial adapter. This is not an RS-232 voltage interface."
+  },
+  "J5": {
+    "name": "Wi-Fi antenna 1",
+    "description": "Coaxial antenna connection to the corresponding radio. The highlighted path includes the RF matching network as a functional group."
+  },
+  "J3": {
+    "name": "Wi-Fi antenna 2",
+    "description": "Coaxial antenna connection to the corresponding radio. The highlighted path includes the RF matching network as a functional group."
+  },
+  "J9": {
+    "name": "2.4 GHz antenna",
+    "description": "Coaxial antenna connection to the corresponding radio. The highlighted path includes the RF matching network as a functional group."
+  },
+  "J12": {
+    "name": "Sub-GHz antenna",
+    "description": "Coaxial antenna connection to the corresponding radio. The highlighted path includes the RF matching network as a functional group."
+  }
+}

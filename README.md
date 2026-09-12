@@ -1,59 +1,55 @@
-# Nano Atlas
+# BeaglePlay — Inside the board
 
-Local 3D explorer for the original Arduino Nano 33 BLE Sense (ABX00031) and BeaglePlay. Use the board dropdown in the header to switch.
+A static, interactive 3D explorer dedicated to BeaglePlay. The browser loads a compressed 5.3 MiB model with 798 individually selectable component assemblies, original PCB silkscreen, material grain, plated connectors and chip markings.
 
-Run `node server.cjs`, then open http://localhost:4173. The server listens only on this computer. Three.js and OrbitControls are vendored locally; the explorer does not need a CDN connection.
+Rotate, zoom, pan, switch front/back views, explode the assembly, isolate a part, or follow functional connection paths. Search references, functions and manufacturer part numbers. The inspector includes the published BOM, verified TI datasheet links where available, and Mouser/DigiKey searches.
 
-Drag to rotate, scroll/pinch to zoom, right-drag to pan. Click a component or use the component index. Click a net in the inspector to isolate it. The explode slider separates packages; Bottom exposes debug pads and solder jumpers.
+## Run locally
 
-## Scope and sources
-
-Educational geometry, approximate component placement, functional electrical nets, 30 selectable headers, and grouped passive support circuits. This is not a complete manufacturing CAD or copper-routing reconstruction. No hardware connection or simulated sensor readings.
-
-- Arduino Nano 33 BLE Sense: https://docs.arduino.cc/hardware/nano-33-ble-sense/
-- Schematic (V4.0, included as dist/schematic.pdf): https://docs.arduino.cc/resources/schematics/ABX00031-schematics.pdf
-- Pinout: https://docs.arduino.cc/resources/pinouts/ABX00031-full-pinout.pdf
-- Core pin definitions: https://github.com/arduino/ArduinoCore-mbed/blob/main/variants/ARDUINO_NANO33BLE/pins_arduino.h
-
-Hardware schematic attribution: Arduino, CC BY-SA 4.0. The model follows the linked V4.0 schematic for part and jumper designators. Microphone and regulator packages can differ by production revision. U4 is DNP in that schematic; it is not modeled as a fitted crypto IC. Sense Rev2 uses different sensors and is not represented here.
-
-Three.js is distributed under its MIT license: https://github.com/mrdoob/three.js/blob/r170/LICENSE
-
-## BeaglePlay
-
-Open http://localhost:4173/?board=beagleplay directly. The model has 56 selectable parts, circuit groups, connectors and mikroBUS contacts, and 53 logical connection paths. Major chips are on the back; selecting them from the index turns the board over. Front/back controls and the explode slider are shared with the Nano explorer.
-
-BeaglePlay connections include grouped parallel buses, differential lanes, power rails, and support circuits. They are functional explanations, not a complete pin-level netlist. Separate power rails shown in one bundle are not electrically shorted. Shapes and placement are approximate.
-
-Sources: BeagleBoard.org documentation, CC BY-SA 4.0:
-
-- https://www.beagleboard.org/boards/beagleplay
-- https://docs.beagleboard.org/boards/beagleplay/01-introduction.html
-- https://docs.beagleboard.org/boards/beagleplay/03-design.html
-- https://docs.beagleboard.org/boards/beagleplay/04-expansion.html
-- Bus assignments cross-checked against https://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
-
-Run `node verify.mjs` for dataset integrity, Three.js geometry, representative raycasts, component selection, explosion, visibility controls and dropdown navigation checks. These run with a stubbed DOM/renderer and do not replace browser visual testing.
-
-## Development and repository
-
-Requires Node.js 22 or newer. No dependency installation or build is needed.
-Run `npm start` to serve the site and `npm test` for the existing verification suite.
-The `dist/` folder contains the actual website source and is intentionally committed,
-including its local Three.js dependency and schematic. Root-level images, saved
-reference pages and the device tree are supporting research materials.
-`extend-renderer.py` is a historical editing helper, not a required build step.
-
-To push this repository to a new empty remote:
+Requires Node.js 22 or newer. Runtime dependencies are included in `dist`; no package installation or CAD software is needed to view the site.
 
 ```sh
-git remote add origin <your-repository-url>
-git push -u origin HEAD
+npm start
 ```
 
-## License
+Open **http://localhost:4173/**. `PORT` and `BASE_PATH` can override the port and mount path for testing. Run `npm test` to validate assets, module dependencies, component data and serving beneath a repository path.
 
-Original Nano Atlas code is licensed under MIT; see [LICENSE](LICENSE).
-MIT permits commercial use, modification and redistribution with its notices retained.
-Third-party software and hardware reference materials retain their own licenses;
-see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for attribution and scope.
+## Deploy with GitHub Actions / GitHub Pages
+
+1. Push this repository to GitHub with the site on `main` or `master`.
+2. In the repository, choose **Settings → Pages → Build and deployment → Source → GitHub Actions**.
+3. Run **Deploy BeaglePlay Explorer** from the Actions tab, or push another commit to the configured branch.
+
+The included `.github/workflows/pages.yml` validates the committed static files, uploads `dist`, and deploys to the `github-pages` environment. The deployment job reports the public URL. Relative asset paths support both `username.github.io/repository/` and a custom domain. No backend, API keys, CDN, Blender installation or CAD conversion is required on GitHub Actions.
+
+This change prepares the workflow; it does not itself push or publish the repository. GitHub setup follows the [official Pages workflow documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
+
+## Model provenance and limits
+
+- Geometry: official `Design/beagleplayv10_a2_board_3D_20221219.stp`. Empty assembly placeholders are resolved before triangulating each distinct package. Instance transforms preserve the original placements.
+- PCB: February 2023 Gerber silkscreen/solder-mask artwork rendered at 4096 × 4096. The rounded substrate and mounting holes are reconstructed; minor revision/placement differences can exist.
+- U5 Wi-Fi module: reconstructed from its documented package dimensions and official placement. Connector inserts, surface materials and laser markings are visual additions. This is a rendered CAD model, not a photogrammetry scan or a manufacturing inspection tool.
+- Catalog: all 725 published BOM references are searchable. The CAD also contains extra references; unmatched entries are identified. Thirteen BOM references lack corresponding 3D geometry and remain inspectable as “BOM only”.
+- Connection paths show functional bus/rail bundles. They are **not physical copper routes**, and individual passive nets are not mapped. Exact wiring remains in the linked official schematic.
+- Distributor links are part-number searches, not verified stock listings. Some manufacturer part numbers contain source-BOM variant suffixes. Parts without a verified direct datasheet link say so.
+
+Source hardware: [BeaglePlay design repository](https://openbeagle.org/beagleplay/beagleplay), [board photographs and component documentation](https://docs.beagleboard.org/boards/beagleplay/01-introduction.html), and [official board page](https://www.beagleboard.org/boards/beagleplay).
+
+## Rebuild the CAD assets (optional)
+
+The committed GLB is ready to serve. To regenerate it, install the development dependencies with pnpm, then run:
+
+```sh
+node download-sources.mjs
+node split-step.mjs
+node convert-split.cjs
+node build-artwork.mjs
+node build-bom.mjs
+node build-model.mjs
+node optimize-model.mjs
+node verify.mjs
+```
+
+The 57 MB source STEP and intermediate triangulations are excluded from Git. Engineering source files and attribution are retained in `assets-source`. The converter uses OpenCascade via `occt-import-js`; the browser uses only the optimized GLB and vendored Three.js/Meshopt code.
+
+Original application code is MIT licensed. Hardware-derived assets are CC BY 4.0; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and the included upstream license.

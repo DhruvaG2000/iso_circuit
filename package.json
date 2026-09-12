@@ -1,13 +1,23 @@
 {
-  "name": "nano-atlas",
-  "version": "1.0.0",
+  "name": "beagleplay-explorer",
+  "version": "2.0.0",
   "private": true,
-  "description": "Local 3D explorer for Arduino Nano 33 BLE Sense and BeaglePlay",
+  "description": "Detailed interactive BeaglePlay CAD explorer for the web",
   "type": "module",
   "license": "MIT",
   "scripts": {
     "start": "node server.cjs",
     "test": "node verify.mjs"
   },
-  "engines": { "node": ">=22" }
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@gltf-transform/core": "^4.5.0",
+    "@gltf-transform/extensions": "^4.5.0",
+    "@gltf-transform/functions": "^4.5.0",
+    "@resvg/resvg-js": "^2.6.2",
+    "meshoptimizer": "^1.2.0",
+    "occt-import-js": "^0.0.23"
+  }
 }
